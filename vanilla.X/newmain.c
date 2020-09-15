@@ -2,17 +2,15 @@
  * File:   newmain.c
  * Author: chiky
  *
- * Created on 11 de septiembre de 2020, 10:06 AM
+ * Created on 11 de septiembre de 2020, 03:35 PM
  */
 
-// PIC18LF43K22 Configuration Bit Settings
+// PIC18F43K22 Configuration Bit Settings
 
 // 'C' source line config statements
 
 // CONFIG1H
-/*Seleccion de oscilador interno*/
 #pragma config FOSC = INTIO7    // Oscillator Selection bits (Internal oscillator block, CLKOUT function on OSC2)
-
 #pragma config PLLCFG = OFF     // 4X PLL Enable (Oscillator used directly)
 #pragma config PRICLKEN = ON    // Primary clock enable bit (Primary clock is always enabled)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
@@ -68,34 +66,23 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
+
 #include <xc.h>
-#include <stdio.h>
+
 void main(void) {
-    
-    TRISAbits.RA4 = 1;
+    TRISAbits.RA5 = 1;
     TRISAbits.RA7 = 0;
-    TRISAbits.RA6 = 0;  
-    TRISAbits.RA5 = 0;
-    ANSELAbits.ANSA5 = 0;
+    
     //OSCCONbits.SCS = 0b00; //Selecciona el oscilador del FOSC
-    OSCCONbits.IRCF = 0b110;//Establece la velocidad a 1MHz
+    //OSCCONbits.IRCF = 0;//Establece la velocidad a 31.25kHz
     
     while(1){
-        PORTAbits.RA5 = 1;
-        NOP();
-        PORTAbits.RA5 = 0;
-        NOP();
-//        //if (PORTAbits.RA4 == 1){
-//        //PORTAbits.RA7 = 1;
-//        _delay(100);//100 micros de retraso
-//        PORTAbits.RA7 = 0;
-//        _delay(100);
-//        }
-//        if (PORTAbits.RA4 == 0){
-//        PORTAbits.RA7 = 0;  
-//        }
+        if (PORTAbits.RA5 == 1){
+        PORTAbits.RA7 = 1;  
+        }
+        if (PORTAbits.RA5 == 0){
+        PORTAbits.RA7 = 0;  
+        }
     }
-
-           
     return;
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/production\Prueba1PYANSA.X.production.hex">
+  <executable name="dist/default/production\vanilla.X.production.hex">
     <memory name="program">
       <units>bytes</units>
       <length>8192</length>
-      <used>46</used>
-      <free>8146</free>
+      <used>54</used>
+      <free>8138</free>
     </memory>
     <memory name="data">
       <units>bytes</units>

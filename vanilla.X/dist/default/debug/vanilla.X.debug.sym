@@ -5,7 +5,7 @@ __S4 0 0 ABS 0
 __S5 0 0 ABS 0
 __Hintentry 0 0 ABS 0
 __Lintentry 0 0 ABS 0
-_main 1FDC 0 CODE 0
+_main 1FD4 0 CODE 0
 ___sp 0 0 STACK 2
 start 0 0 CODE 0
 __Hirdata 0 0 CODE 0
@@ -72,7 +72,7 @@ __end_of_main 2000 0 CODE 0
 __Lrbss 0 0 COMRAM 1
 __Htext 0 0 ABS 0
 __Ltext 0 0 ABS 0
-end_of_initialization 1FD6 0 CODE 0
+end_of_initialization 1FCE 0 CODE 0
 _TRISAbits F92 0 ABS 0
 _PORTAbits F80 0 ABS 0
 __Hibigdata 0 0 CODE 0
@@ -87,10 +87,10 @@ __Hpowerup 0 0 CODE 0
 __Lpowerup 0 0 CODE 0
 __Htext0 0 0 ABS 0
 __Ltext0 0 0 ABS 0
-__ptext0 1FDC 0 CODE 0
+__ptext0 1FD4 0 CODE 0
 __Hclrtext 0 0 ABS 0
 __Lclrtext 0 0 ABS 0
-__end_of__initialization 1FD6 0 CODE 0
+__end_of__initialization 1FCE 0 CODE 0
 ___rparam_used 1 0 ABS 0
 __Hidata 0 0 CODE 0
 __Lidata 0 0 CODE 0
@@ -117,7 +117,7 @@ __Hnvbit 0 0 COMRAM 1
 __Lnvbit 0 0 COMRAM 1
 __Hcinit 0 0 ABS 0
 __Lcinit 0 0 ABS 0
-__pcinit 1FD6 0 CODE 0
+__pcinit 1FCE 0 CODE 0
 __ramtop 200 0 RAM 0
 __mediumconst 0 0 MEDIUMCONST 0
 __size_of_main 0 0 ABS 0
@@ -126,9 +126,7 @@ __Lconst 0 0 CONST 0
 __Hspace_4 60000E 0 ABS 0
 __Lspace_4 0 0 ABS 0
 ___inthi_sp 0 0 STACK 2
-_ANSELAbits F38 0 ABS 0
 ___intlo_sp 0 0 STACK 2
-_OSCCONbits FD3 0 ABS 0
 __smallconst 0 0 SMALLCONST 0
 __Hreset_vec 0 0 CODE 0
 __Lreset_vec 0 0 CODE 0
@@ -139,32 +137,30 @@ intlevel0 0 0 CODE 0
 intlevel1 0 0 CODE 0
 intlevel2 0 0 CODE 0
 intlevel3 0 0 CODE 0
-start_initialization 1FD6 0 CODE 0
-__initialization 1FD6 0 CODE 0
+start_initialization 1FCE 0 CODE 0
+__initialization 1FCE 0 CODE 0
 __activetblptr 0 0 ABS 0
 %segments
 reset_vec 0 3 CODE 0 0
-text0 1FDC 1FFF CODE 1FDC 0
-cinit 1FD6 1FDB CODE 1FD6 0
+text0 1FD4 1FFF CODE 1FD4 0
+cinit 1FCE 1FD3 CODE 1FCE 0
 %locals
-dist/default/production\Prueba1PYANSA.X.production.o
-C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h
-C:\Users\chiky\AppData\Local\Temp\s79sx.s
-663 1FD6 0 CODE 0
-665 1FD6 0 CODE 0
-668 1FD6 0 CODE 0
-674 1FD6 0 CODE 0
-676 1FD6 0 CODE 0
-677 1FD8 0 CODE 0
+dist/default/debug\vanilla.X.debug.o
+C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18f43k22.h
+C:\Users\chiky\AppData\Local\Temp\sbrkx.s
+659 1FCE 0 CODE 0
+661 1FCE 0 CODE 0
+664 1FCE 0 CODE 0
+670 1FCE 0 CODE 0
+672 1FCE 0 CODE 0
+673 1FD0 0 CODE 0
 newmain.c
-73 1FDC 0 CODE 0
-75 1FDC 0 CODE 0
-76 1FDE 0 CODE 0
-77 1FE0 0 CODE 0
-78 1FE2 0 CODE 0
-79 1FE4 0 CODE 0
-81 1FE8 0 CODE 0
-84 1FF0 0 CODE 0
-85 1FF2 0 CODE 0
-86 1FF4 0 CODE 0
-87 1FF6 0 CODE 0
+72 1FD4 0 CODE 0
+73 1FD4 0 CODE 0
+74 1FD6 0 CODE 0
+79 1FD8 0 CODE 0
+80 1FD8 0 CODE 0
+81 1FE6 0 CODE 0
+82 1FE8 0 CODE 0
+83 1FE8 0 CODE 0
+84 1FF6 0 CODE 0

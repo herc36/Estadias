@@ -15,6 +15,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "8092
 [; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 8092: extern volatile TRISAbits_t TRISAbits __attribute__((address(0xF92)));
 [v _TRISAbits `VS394 ~T0 @X0 0 e@3986 ]
+"58
+[; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 58:     struct {
+[s S7 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S7 . ANSA0 ANSA1 ANSA2 ANSA3 . ANSA5 ]
+"57
+[; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 57: typedef union {
+[u S6 `S7 1 ]
+[n S6 . . ]
+"67
+[; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 67: extern volatile ANSELAbits_t ANSELAbits __attribute__((address(0xF38)));
+[v _ANSELAbits `VS6 ~T0 @X0 0 e@3896 ]
 "16018
 [; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 16018:     struct {
 [s S763 :2 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
@@ -89,10 +100,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "6365
 [; ;C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\proc\pic18lf43k22.h: 6365: extern volatile PORTAbits_t PORTAbits __attribute__((address(0xF80)));
 [v _PORTAbits `VS331 ~T0 @X0 0 e@3968 ]
-[v F5943 `(v ~T0 @X0 1 tf1`ul ]
-"203 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\pic18.h
-[v __delay `JF5943 ~T0 @X0 0 e ]
-[p i __delay ]
+"50 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18F-K_DFP/1.4.87/xc8\pic\include\pic18.h
+[v ___nop `(v ~T0 @X0 0 ef ]
+[p i ___nop ]
 "14 newmain.c
 [p x FOSC  =  INTIO7     ]
 "16
@@ -926,54 +936,44 @@ Version 4.0 HI-TECH Software Intermediate Code
 "76
 [; ;newmain.c: 76:     TRISAbits.RA7 = 0;
 [e = . . _TRISAbits 1 7 -> -> 0 `i `uc ]
+"77
+[; ;newmain.c: 77:     TRISAbits.RA6 = 0;
+[e = . . _TRISAbits 1 6 -> -> 0 `i `uc ]
 "78
-[; ;newmain.c: 78:     OSCCONbits.IRCF = 0b011;
-[e = . . _OSCCONbits 0 3 -> -> 3 `i `uc ]
-"80
-[; ;newmain.c: 80:     while(1){
+[; ;newmain.c: 78:     TRISAbits.RA5 = 0;
+[e = . . _TRISAbits 1 5 -> -> 0 `i `uc ]
+"79
+[; ;newmain.c: 79:     ANSELAbits.ANSA5 = 0;
+[e = . . _ANSELAbits 0 5 -> -> 0 `i `uc ]
+"81
+[; ;newmain.c: 81:     OSCCONbits.IRCF = 0b110;
+[e = . . _OSCCONbits 0 3 -> -> 6 `i `uc ]
+"83
+[; ;newmain.c: 83:     while(1){
 [e :U 855 ]
 {
-"81
-[; ;newmain.c: 81:         if (PORTAbits.RA4 == 1){
-[e $ ! == -> . . _PORTAbits 0 4 `i -> 1 `i 857  ]
-{
-"82
-[; ;newmain.c: 82:         PORTAbits.RA7 = 1;
-[e = . . _PORTAbits 0 7 -> -> 1 `i `uc ]
-"83
-[; ;newmain.c: 83:         _delay(100);
-[e ( __delay (1 -> -> -> 100 `i `l `ul ]
 "84
-[; ;newmain.c: 84:         PORTAbits.RA7 = 0;
-[e = . . _PORTAbits 0 7 -> -> 0 `i `uc ]
+[; ;newmain.c: 84:         PORTAbits.RA5 = 1;
+[e = . . _PORTAbits 0 5 -> -> 1 `i `uc ]
 "85
-[; ;newmain.c: 85:         _delay(100);
-[e ( __delay (1 -> -> -> 100 `i `l `ul ]
+[; ;newmain.c: 85:         __nop();
+[e ( ___nop ..  ]
 "86
-[; ;newmain.c: 86:         }
-}
-[e :U 857 ]
+[; ;newmain.c: 86:         PORTAbits.RA5 = 0;
+[e = . . _PORTAbits 0 5 -> -> 0 `i `uc ]
 "87
-[; ;newmain.c: 87:         if (PORTAbits.RA4 == 0){
-[e $ ! == -> . . _PORTAbits 0 4 `i -> 0 `i 858  ]
-{
-"88
-[; ;newmain.c: 88:         PORTAbits.RA7 = 0;
-[e = . . _PORTAbits 0 7 -> -> 0 `i `uc ]
-"89
-[; ;newmain.c: 89:         }
-}
-[e :U 858 ]
-"90
-[; ;newmain.c: 90:     }
+[; ;newmain.c: 87:         __nop();
+[e ( ___nop ..  ]
+"97
+[; ;newmain.c: 97:     }
 }
 [e :U 854 ]
 [e $U 855  ]
 [e :U 856 ]
-"93
-[; ;newmain.c: 93:     return;
+"100
+[; ;newmain.c: 100:     return;
 [e $UE 853  ]
-"94
-[; ;newmain.c: 94: }
+"101
+[; ;newmain.c: 101: }
 [e :UE 853 ]
 }
