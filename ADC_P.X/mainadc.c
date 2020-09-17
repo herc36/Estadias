@@ -13,6 +13,9 @@ void main(void) {
     OSCCONbits.IRCF = 0b110; //8 Megas (x PLL =32MHz)
     OSCCONbits.SCS = 0b00; //Oscilador seleccionado por fosc(Interno)
     ANSELAbits.ANSA0 = 1; //Establecemos RA0 analogico
+    ANSELCbits.ANSC6 = 0; //Establecemos RC6 digital
+    ANSELCbits.ANSC7 = 0; //Establecemos RC7 digital
+    ANSELD = 0; //Establecemos el puerto D digital
     TRISAbits.RA0 = 1; //Establecemos RA0 como entrada
     TRISCbits.RC6 = 0; //Establecemos RC6 como salida
     TRISCbits.RC7 = 0; //Establecemos RC7 como salida
