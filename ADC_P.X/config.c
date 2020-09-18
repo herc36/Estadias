@@ -1,11 +1,14 @@
 /*
- * File:   mainadc.c
+ * File:   config.c
  * Author: chiky
  *
- * Created on 16 de septiembre de 2020, 12:33 PM
+ * Created on 17 de septiembre de 2020, 12:33 PM
  */
+
+
+#include <xc.h>
 #pragma config FOSC = INTIO67   // Oscillator Selection bits (Internal oscillator block)
-#pragma config PLLCFG = OFF     // 4X PLL Enable (Oscillator used directly)
+#pragma config PLLCFG = ON     // 4X PLL Enable (Oscillator used directly)
 #pragma config PRICLKEN = ON    // Primary clock enable bit (Primary clock is always enabled)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
 #pragma config IESO = OFF       // Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
@@ -62,48 +65,7 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
-#define _XTRAL_FREQ 32000000
 
-#include <xc.h>
-//#include "config.h"
-void main(void) {
-    int resadc;
-    OSCCONbits.IRCF = 0b110; //8 Megas (x PLL =32MHz)
-    OSCTUNEbits.PLLEN = 0b1; //Hailitar el PLL
-    OSCCONbits.SCS = 0b00; //Oscilador seleccionado por fosc(Interno)
-    ANSELAbits.ANSA0 = 1; //Establecemos RA0 analogico
-    ANSELCbits.ANSC6 = 0; //Establecemos RC6 digital
-    ANSELCbits.ANSC7 = 0; //Establecemos RC7 digital
-    ANSELCbits.ANSC4 = 0; //Establecemos RC4 digital
-    ANSELD = 0; //Establecemos el puerto D digital
-    TRISAbits.RA0 = 1; //Establecemos RA0 como entrada
-    TRISCbits.RC6 = 0; //Establecemos RC6 como salida
-    TRISCbits.RC7 = 0; //Establecemos RC7 como salida
-    TRISCbits.RC4 = 0; //Establecemos RC4 como salida
-    TRISD = 0; //Establecemos el puerto D como salida;
-   
-    ADCON0bits.CHS = 0;
-    
-    ADCON1bits.NVCFG = 0; //VRef negativo interno
-    ADCON1bits.PVCFG =0; //VRef positivo interno
-    ADCON2bits.ADCS = 0b110; //Fosc/64
-    ADCON2bits.ADFM = 1; //Recorrido a la derecha
-    ADCON2bits.ACQT = 0b101; //12 TAD
-    ADCON0bits.ADON = 1; //Encendemos el ADC
-    PORTD=0x00;
-    PORTDbits.RD0 = 1;
-    while(1){
-        ADCON0bits.GO = 1; //Empieza el ADC
-        PORTCbits.RC4 = 1;
-        while(ADCON0bits.GO);
-//            resadc = ADRESH;
-//            resadc = resadc<<8;
-//            resadc = resadc + ADRESL;
-        
-            PORTCbits.RC6 = ADRESH >> 1;
-            PORTCbits.RC7 = ADRESH;
-            PORTD = ADRESL;
-            PORTCbits.RC4 = 0;
-    }
-    return;
-}
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
+
