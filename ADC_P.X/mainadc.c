@@ -91,19 +91,23 @@ void main(void) {
     ADCON2bits.ACQT = 0b101; //12 TAD
     ADCON0bits.ADON = 1; //Encendemos el ADC
     PORTD=0x00;
-    PORTDbits.RD0 = 1;
     while(1){
         ADCON0bits.GO = 1; //Empieza el ADC
-        PORTCbits.RC4 = 1;
         while(ADCON0bits.GO);
-//            resadc = ADRESH;
+            resadc = ADRES;
 //            resadc = resadc<<8;
 //            resadc = resadc + ADRESL;
         
             PORTCbits.RC6 = ADRESH >> 1;
             PORTCbits.RC7 = ADRESH;
             PORTD = ADRESL;
+            if (resadc>=0b1101000){ // .5/4.8x10^-3
+            PORTCbits.RC4 = 1;
+            }
+            else if (resadc<=0b110100){ // .25/4.8x10^-3
             PORTCbits.RC4 = 0;
+            }
+            
     }
     return;
 }
