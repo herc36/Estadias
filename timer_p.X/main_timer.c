@@ -66,7 +66,6 @@ int resadc[10];
 void __interrupt(high_priority) myHiIsr(void){  
 if (INTCONbits.INT0IF==1){
     PORTAbits.RA0 =~PORTAbits.RA0;
-    while(1);
     INTCONbits.INT0IF = 0;
 }
 }
