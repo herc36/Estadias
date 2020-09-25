@@ -65,7 +65,7 @@
 #define _XTRAL_FREQ 32000000
 
 #include <xc.h>
-//#include "config.h"
+//#include "config.h" 
 void main(void) {
     int resadc;
     OSCCONbits.IRCF = 0b110; //8 Megas (x PLL =32MHz)
@@ -101,7 +101,7 @@ void main(void) {
             PORTCbits.RC6 = ADRESH >> 1;
             PORTCbits.RC7 = ADRESH;
             PORTD = ADRESL;
-            if (resadc>=0b1101000){ // .5/4.8x10^-3
+            if (resadc>=0b1100110){ // .5/4.8x10^-3
             PORTCbits.RC4 = 1;
             }
             else if (resadc<=0b110100){ // .25/4.8x10^-3
