@@ -1,11 +1,6 @@
-/*
- * File:   mainadc.c
- * Author: chiky
- *
- * Created on 16 de septiembre de 2020, 12:33 PM
- */
-#pragma config FOSC = INTIO67   // Oscillator Selection bits (Internal oscillator block)
-#pragma config PLLCFG = OFF     // 4X PLL Enable (Oscillator used directly)
+// CONFIG1H
+#pragma config FOSC = INTIO67    // Oscillator Selection bits (Internal oscillator block)
+#pragma config PLLCFG = ON      // 4X PLL Enable (Oscillator multiplied by 4)
 #pragma config PRICLKEN = ON    // Primary clock enable bit (Primary clock is always enabled)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
 #pragma config IESO = OFF       // Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
@@ -63,51 +58,99 @@
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 #define _XTRAL_FREQ 32000000
-
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
 #include <xc.h>
-//#include "config.h" 
+#include "flex_lcd.h"
+#include <stdio.h>
+#include <pic18.h>
+int resadc[9]; int x=0;
+float temp[9]; float promedio=0.0;
+unsigned char impresion[20];
+
+void __interrupt() myIsr(void){
+    if (INTCONbits.TMR0IF==1){
+        if (x<10){
+            PORTAbits.RA5 = 1;
+            _delay(500000);
+            PORTAbits.RA5 = 0;
+            
+            ADCON0bits.GO = 1; //Empieza el ADC
+            while(ADCON0bits.GO);
+            resadc[x] = ADRES;
+            x++;
+//            ADCON0bits.GO = 0; //Finaliza el ADC
+        }
+        PORTAbits.RA1 =~PORTAbits.RA1;
+        INTCONbits.TMR0IF = 0;
+        TMR0L = 0b10000100; //Parte baja del tmr0 de 28036 [65536-37500] (300ms seg con ps de 64)
+        TMR0H = 0b01101101; //Parte alta del tmr0 de 28036 [65536-37500] (300ms seg con ps de 64)        
+    }
+}
+
 void main(void) {
-    int resadc;
+    //Configuracion osc
     OSCCONbits.IRCF = 0b110; //8 Megas (x PLL =32MHz)
     OSCTUNEbits.PLLEN = 0b1; //Hailitar el PLL
-    OSCCONbits.SCS = 0b00; //Oscilador seleccionado por fosc(Interno)
+    OSCCONbits.SCS = 0b00; //Oscilador seleccionado por Config1(Interno)
+    //Configuracion interrupciones
+    INTCONbits.TMR0IE = 1; //Habilita la interrupcion del timer 0
+    INTCONbits.TMR0IF = 0; //Establece flag en 0
+    INTCONbits.GIEH = 1; //Habilita todas las interrupciones altas
+    INTCONbits.GIEL = 1; //Habilita todas las interrupciones bajas
+    //Configuracion timer
+    T0CONbits.T08BIT = 0; //Establece en 16 bits el timer
+    T0CONbits.T0CS = 0; //Selecciona el reloj interno
+    T0CONbits.PSA = 0; //Habilita el prescaler
+    T0CONbits.T0PS = 0b101; //Prescaler a 64
+    TMR0L = 0b10000100; //Parte baja del tmr0 de 28036 [65536-37500] (300ms seg con ps de 64)
+    TMR0H = 0b01101101; //Parte alta del tmr0 de 28036 [65536-37500] (300ms seg con ps de 64)
+    //Configuracion ADC
     ANSELAbits.ANSA0 = 1; //Establecemos RA0 analogico
-    ANSELCbits.ANSC6 = 0; //Establecemos RC6 digital
-    ANSELCbits.ANSC7 = 0; //Establecemos RC7 digital
-    ANSELCbits.ANSC4 = 0; //Establecemos RC4 digital
-    ANSELD = 0; //Establecemos el puerto D digital
     TRISAbits.RA0 = 1; //Establecemos RA0 como entrada
-    TRISCbits.RC6 = 0; //Establecemos RC6 como salida
-    TRISCbits.RC7 = 0; //Establecemos RC7 como salida
-    TRISCbits.RC4 = 0; //Establecemos RC4 como salida
-    TRISD = 0; //Establecemos el puerto D como salida;
-   
-    ADCON0bits.CHS = 0;
-    
+    ADCON0bits.CHS = 0; //Seleccionamos AN0
     ADCON1bits.NVCFG = 0; //VRef negativo interno
     ADCON1bits.PVCFG =0; //VRef positivo interno
-    ADCON2bits.ADCS = 0b110; //Fosc/64
+    ADCON2bits.ADCS = 0b011; //Fosc interno
     ADCON2bits.ADFM = 1; //Recorrido a la derecha
     ADCON2bits.ACQT = 0b101; //12 TAD
     ADCON0bits.ADON = 1; //Encendemos el ADC
-    PORTD=0x00;
+    //Config de pins
+    ANSELAbits.ANSA1 = 0; //Establecemos RA1 digital
+    TRISAbits.RA1=0; //Establecemos RA1 como salida
+    ANSELAbits.ANSA5 = 0; //Establecemos RA5 digital
+    TRISAbits.RA5=0; //Establecemos RA5 como salida
+    PORTD=0; //Limpiamos el puerto D
+    TRISD = 0; //Establecemos el puerto D como salida;
+    ANSELD = 0; //Establecemos el puerto D digital
+    //Config LCD
+    Lcd_Init();
+    Lcd_Cmd(LCD_CLEAR);
+    Lcd_Cmd(LCD_CURSOR_OFF);
+    _delay(100000);
+    
     while(1){
-        ADCON0bits.GO = 1; //Empieza el ADC
-        while(ADCON0bits.GO);
-            resadc = ADRES;
-//            resadc = resadc<<8;
-//            resadc = resadc + ADRESL;
-        
-            PORTCbits.RC6 = ADRESH >> 1;
-            PORTCbits.RC7 = ADRESH;
-            PORTD = ADRESL;
-            if (resadc>=0b1100110){ // .5/4.8x10^-3
-            PORTCbits.RC4 = 1;
+        if (x<10){
+            Lcd_Out(1,1,"Temperatura:");
+            Lcd_Out(2,1,"Cargando");
+            Lcd_Cmd(LCD_BLINK_CURSOR_ON);
+            _delay(100000);
+        }
+        else if (x>10){
+            for (int i=0; i<10; i++){
+                temp[i] = 100*(resadc[i]*5.0/1024.0);
+                promedio = promedio + temp[i];
             }
-            else if (resadc<=0b110100){ // .25/4.8x10^-3
-            PORTCbits.RC4 = 0;
-            }
-            
+            Lcd_Cmd(LCD_CLEAR);
+            Lcd_Cmd(LCD_CURSOR_OFF);
+            Lcd_Out(1,1,"Temperatura:");
+            _delay(100000);
+            promedio = promedio/10;
+            sprintf(impresion,"%04.2f",promedio);
+            Lcd_Out2(2,1,impresion);            
+        }
+        PORTD = resadc[0];
     }
+    
     return;
 }
