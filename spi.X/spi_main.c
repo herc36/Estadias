@@ -60,43 +60,74 @@
 
 #include <xc.h>
 #define _XTRAL_FREQ 64000000
-void fstring (char msj[]);
-char salidatx[]="Hola muy buenas a todos prueba de tx, como estas Edgar";
-int fin=14;
-
+void mandarspi(unsigned char entradaspi);
+//void mandarspiepron(unsigned char entradaspi);
+//void statusepron(void);
 void main(void) {
     //Configuracion osc
     OSCCONbits.IRCF = 0b111; //16 Megas (x PLL =64MHz)
     OSCTUNEbits.PLLEN = 0b1; //Habilitar el PLL
     OSCCONbits.SCS = 0b00; //Oscilador seleccionado por Config1(Interno)
-    //Config del puerto serial
-    TRISCbits.RC6 = 0; //Establecemos el puerto RC6 (TX1) como salida
-    TX1STAbits.SYNC = 0; //Establecemos modo asincrono
-    TX1STAbits.TXEN = 1; //Habilitamos la transmision
-    RCSTA1bits.SPEN = 1; //Habilitamos el puerto serial
-    BAUD1CONbits.BRG16 = 0; //8 bits del generador
-    TX1STAbits.BRGH = 0; //Baud rate de baja velocidad
-    SPBRG1 = 103;  //Baud rate a 9600
     //Config de otros pins
-    ANSELAbits.ANSA1 = 0; //Establecemos RA1 digital
-    TRISAbits.RA1=0; //Establecemos RA1 como salida
-    PORTA = 0;
-    PORTC = 0;
-//    salidatx[]="Muy buenas a todos";
-//    salidatx ={'M','u','y',' ','b','u','e','n','a','s'};
-    fstring(salidatx);
-    while(1);
-    return;
-}
-
-void fstring (char msj[]){
-    int i=0;
-    while(msj[i]){
-        TXREG1 = msj[i];
-        i++;
-        while(TX1STAbits.TRMT==0);
-        if (i==fin){ //
-            break;   //Lineas de limite de array
-        }            //
+    ANSELB = 0; //Establecemos puerto B digital
+    TRISB = 1; //Establecemos el puerto B como entrada
+    PORTB = 0;
+    //Config de SPI
+    ANSELC = 0;
+    TRISCbits.RC3 = 0; //Establecemos RC3 (SCK) como salida
+    TRISCbits.RC4 = 1; //Establecemos RC4 (SDI) como entrada
+    TRISCbits.RC5 = 0; //Establecemos RC5 (SDO) como salida
+    TRISAbits.RA5 = 0; //Establecemos RA5 (SS) como salida
+    LATAbits.LA5 = 1; //Inicia estado de SS
+    SSP1CON1bits.SSPEN = 1; //Habilitamos el SPI
+    SSP1CON1bits.SSPM = 0b0010; //SPI Master mode, clock = FOSC/64 (1Mhz))
+    SSP1STATbits.SMP = 0; //Muestreo del input data a medio tiempo
+//    SSP1STATbits.CKE = 0; //Transmision en flanco de bajada
+    SSP1STATbits.CKE = 1; //Transmision en flanco de bajada
+    SSP1CON1bits.CKP = 0; //Estado de espera de SCK bajo
+//    statusepron();
+    while(1){
+        mandarspi(PORTB);
+        _delay(1000000);
     }
 }
+
+void mandarspi(unsigned char entradaspi){
+        LATAbits.LA5 = 0;
+        _delay(100);
+        SSP1BUF = entradaspi;
+        while(PIR1bits.SSP1IF==0);
+        _delay(100);
+        PIR1bits.SSP1IF=0;
+        LATAbits.LA5 = 1;
+}
+
+//void mandarspiepron(unsigned char entradaspi){
+//        LATAbits.LA5 = 0;
+//        _delay(100);
+//        SSP1BUF = 0b10;
+//        while(PIR1bits.SSP1IF==0);
+//        PIR1bits.SSP1IF=0;
+//        SSP1BUF = 0b0;
+//        while(PIR1bits.SSP1IF==0);
+//        PIR1bits.SSP1IF=0;
+//        SSP1BUF = 0b10101010;
+//        while(PIR1bits.SSP1IF==0);
+//        PIR1bits.SSP1IF=0;
+//        _delay(100);
+//        LATAbits.LA5 = 1;
+//}
+//
+//void statusepron(void){
+//        LATAbits.LA5 = 0;
+//        _delay(100);
+//        SSP1BUF = 0b1;
+//        while(PIR1bits.SSP1IF==0);
+//        PIR1bits.SSP1IF=0;
+//        SSP1BUF = 0b0;
+//        while(PIR1bits.SSP1IF==0);
+//        PIR1bits.SSP1IF=0;
+//        _delay(100);
+//        LATAbits.LA5 = 1;
+//}
+
